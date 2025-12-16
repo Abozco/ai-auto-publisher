@@ -1,0 +1,31 @@
+name: AI Auto Publisher
+
+on:
+  schedule:
+    - cron: "0 10 * * *"   # يوميًا الساعة 10 صباحًا
+  workflow_dispatch:       # لتشغيله يدويًا أيضًا
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run publisher
+        run: python publish.py
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_TOKEN: ${{ secrets.FB_TOKEN }}
+          WP_URL: ${{ secrets.WP_URL }}
+          WP_USER: ${{ secrets.WP_USER }}
+          WP_PASS: ${{ secrets.WP_PASS }}
